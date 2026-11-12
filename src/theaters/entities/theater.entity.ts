@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Projector } from '../../projectors/entities/projector.entity';
+import { Screening } from '../../screenings/entities/screening.entity';
 
 @Entity('theaters')
 export class Theater {
@@ -10,4 +18,12 @@ export class Theater {
 
   @Column({ type: 'int' })
   capacity!: number;
+
+  @OneToOne(() => Projector, (projector) => projector.theater)
+  projector?: Projector;
+
+  @OneToMany(() => Screening, (screening) => screening.theater, {
+    cascade: false,
+  })
+  screenings?: Screening[];
 }

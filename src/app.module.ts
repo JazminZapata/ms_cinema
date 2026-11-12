@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SecurityGuard } from './common/guards/security.guard';
 import { TheatersModule } from './theaters/theaters.module';
+import { ProjectorsModule } from './projectors/projectors.module';
+import { MoviesModule } from './movies/movies.module';
+import { ScreeningsModule } from './screenings/screenings.module';
 
 function validateEnvironment(config: Record<string, unknown>) {
   for (const key of ['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME']) {
@@ -39,12 +44,21 @@ function validateEnvironment(config: Record<string, unknown>) {
         password: configService.getOrThrow<string>('DB_PASS'),
         database: configService.getOrThrow<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: false,
+        synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
     TheatersModule,
+    ProjectorsModule,
+    MoviesModule,
+    ScreeningsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: SecurityGuard,
+    },
+  ],
 })
 export class AppModule {}

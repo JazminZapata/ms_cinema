@@ -7,6 +7,7 @@ import { Theater } from '../entities/theater.entity';
 export class TheatersRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
+  //Consultas personalizadas
   async findLargeTheatersReport(minCapacity: number): Promise<Theater[]> {
     const rows = await this.dataSource.query(
       `SELECT id, location, capacity

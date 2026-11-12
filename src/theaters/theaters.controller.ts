@@ -9,14 +9,15 @@ import {
   Post,
 } from '@nestjs/common';
 import { TheatersService } from './theaters.service';
-import { TheaterDto } from './dto/theater.dto';
+import { CreateTheaterDto } from './dto/create-theater.dto';
+import { UpdateTheaterDto } from './dto/update-theater.dto';
 
 @Controller('theaters')
 export class TheatersController {
   constructor(private readonly theatersService: TheatersService) {}
 
   @Post()
-  create(@Body() dto: TheaterDto) {
+  create(@Body() dto: CreateTheaterDto) {
     return this.theatersService.create(dto);
   }
 
@@ -31,7 +32,7 @@ export class TheatersController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: TheaterDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTheaterDto) {
     return this.theatersService.update(id, dto);
   }
 
